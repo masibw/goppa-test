@@ -13,7 +13,7 @@ func TestAdd(t *testing.T) {
 		want int
 	}{
 		{
-			name: "Can add up two numbers..",
+			name: "Can add up two numbers.",
 			args: args{
 				a: 1,
 				b: 2,
