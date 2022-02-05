@@ -21,6 +21,8 @@ jobs:
           key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
           restore-keys: |
             ${{ runner.os }}-go-
+      - name: dump context
+        run: echo '${{ toJSON(github) }}'
       - name: Get dependencies
         run: go mod download -x
       - name: Test
