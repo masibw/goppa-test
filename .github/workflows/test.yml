@@ -29,6 +29,7 @@ jobs:
           path: ./test-${{ github.head_ref }}.log
 
   goppa:
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - name: Setup Go
@@ -46,6 +47,7 @@ jobs:
         with:
           name: test-${{ github.head_ref }}]
       - name: Run goppa
+        if: always()
         run: goppa --previous ./test-${{ github.base_ref }}.log --current ./test-${{ github.head_ref }}.log
 
 
