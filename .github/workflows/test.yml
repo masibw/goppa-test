@@ -1,5 +1,5 @@
 name: test
-on: pull_request
+on: push
 jobs:
   test:
     name: Test local sources
@@ -21,11 +21,9 @@ jobs:
       - name: Get dependencies
         run: go mod download -x
       - name: Test
-        run: go test -v ./...  > ./test-${{ github.head_ref }}.log
+        run: go test -v ./...  > ./test-${{ github.ref_name }}.log
       - name: Save test results
         uses: actions/upload-artifact@v2
         with:
-          name: test-${{ github.head_ref }}
-          path: ./test-${{ github.head_ref }}.log
-
-
+          name: test-${{ github.ref_name }}
+          path: ./test-${{ github.ref_name }}.log
