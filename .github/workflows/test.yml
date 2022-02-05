@@ -27,9 +27,9 @@ jobs:
       - name: Test
         run: go test -v ./...  > ./test-${{ github.sha }}.log
       - name: Save test results
-        uses: actions/upload-artifact@v2
+        uses: actions/cache@v2
         with:
-          name: test-${{ github.sha }}
+          key: test-${{ github.sha }}
           path: ./test-${{ github.sha }}.log
 
   goppa:
@@ -44,12 +44,14 @@ jobs:
       - name: Install goppa
         run: go install github.com/masibw/goppa@latest
       - name: Load previous test result
-        uses: actions/download-artifact@v2
+        uses: actions/cache@v2
         with:
-          name: test-${{ github.event.pull_request.base.sha }}
+          key: test-${{ github.event.pull_request.base.sha }}
+          path: ./test-${{ github.base.sha }}.log
       - name: Load current test result
-        uses: actions/download-artifact@v2
+        uses: actions/cache@v2
         with:
-          name: test-${{ github.sha }}
+          key: test-${{ github.sha }}
+          path: ./test-${{ github.sha }}.log
       - name: Run goppa
         run: goppa --previous ./test-${{ github.event.pull_request.base.sha }}.log --current ./test-${{ github.sha }}.log
