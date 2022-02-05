@@ -20,15 +20,6 @@ jobs:
             ${{ runner.os }}-go-
       - name: Get dependencies
         run: go mod download -x
-<<<<<<< Updated upstream
-      - name: Test
-        run: go test -v ./...  > ./test-${{ github.ref_name }}.log
-      - name: Save test results
-||||||| constructed merge base
-      - name: Test
-        run: go test -v ./...  > ./test-${{ github.head_ref }}.log
-      - name: Save test results
-=======
       - name: Test(on Pull Request)
         if: ${{ github.event_name }} == "pull_request"
         run: go test -v ./...  > ./test-${{ github.head_ref }}.log
@@ -37,38 +28,8 @@ jobs:
         run: go test -v ./...  > ./test-${{ github.ref_name }}.log
       - name: Save test results(on Pull Request)
         if: ${{ github.event_name }} == "pull_request"
->>>>>>> Stashed changes
         uses: actions/upload-artifact@v2
         with:
-<<<<<<< Updated upstream
-          name: test-${{ github.ref_name }}
-          path: ./test-${{ github.ref_name }}.log
-||||||| constructed merge base
-          name: test-${{ github.head_ref }}
-          path: ./test-${{ github.head_ref }}.log
-
-  goppa:
-    if: ${{ github.event_name }} == "pull_request"
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
-      - name: Setup Go
-        uses: actions/setup-go@v2
-        with:
-          go-version: 1.17.6
-      - name: Install goppa
-        run: go install github.com/masibw/goppa@latest
-      - name: Load previous test result
-        uses: actions/download-artifact@v2
-        with:
-          name: test-${{ github.base_ref }}
-      - name: Load current test result
-        uses: actions/download-artifact@v2
-        with:
-          name: test-${{ github.head_ref }}
-      - name: Run goppa
-        run: goppa --previous ./test-${{ github.base_ref }}.log --current ./test-${{ github.head_ref }}.log
-=======
           name: test-${{ github.head_ref }}
           path: ./test-${{ github.head_ref }}.log
       - name: Save test results(on Push)
@@ -99,4 +60,3 @@ jobs:
           name: test-${{ github.head_ref }}
       - name: Run goppa
         run: goppa --previous ./test-${{ github.base_ref }}.log --current ./test-${{ github.head_ref }}.log
->>>>>>> Stashed changes
