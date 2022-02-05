@@ -41,8 +41,6 @@ jobs:
         uses: actions/setup-go@v2
         with:
           go-version: 1.17.6
-      - name: dump context
-        run: echo '${{ toJSON(github) }}'
       - name: Install goppa
         run: go install github.com/masibw/goppa@latest
       - name: Load previous test result
@@ -50,14 +48,10 @@ jobs:
         with:
           key: test-${{ github.event.pull_request.base.sha }}
           path: ./test-${{ github.event.pull_request.base.sha }}.log
-      - name: cat prev
-        run: cat ./test-${{ github.event.pull_request.base.sha }}.log
       - name: Load current test result
         uses: actions/cache@v2
         with:
           key: test-${{ github.sha }}
           path: ./test-${{ github.sha }}.log
-      - name: cat current
-        run: ./test-${{ github.sha }}.log
       - name: Run goppa
         run: goppa --previous ./test-${{ github.event.pull_request.base.sha }}.log --current ./test-${{ github.sha }}.log
