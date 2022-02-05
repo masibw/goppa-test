@@ -1,5 +1,9 @@
 name: test
-on: pull_request
+on:
+  pull_request:
+  push:
+    branches:
+      - main
 jobs:
   test:
     name: Test local sources
@@ -29,6 +33,7 @@ jobs:
           path: ./test-${{ github.head_ref }}.log
 
   goppa:
+    if: ${{ github.event_name }} == "pull_request"
     needs: test
     runs-on: ubuntu-latest
     steps:
