@@ -25,12 +25,12 @@ jobs:
       - name: Get dependencies
         run: go mod download -x
       - name: Test
-        run: go test -v ./...  > ./test-${{ github.head_ref }}.log
+        run: go test -v ./...  > ./test-${{ github.sha }}.log
       - name: Save test results
         uses: actions/upload-artifact@v2
         with:
-          name: test-${{ github.head_ref }}
-          path: ./test-${{ github.head_ref }}.log
+          name: test-${{ github.sha }}
+          path: ./test-${{ github.sha }}.log
 
   goppa:
     if: ${{ github.event_name }} == "pull_request"
@@ -46,10 +46,10 @@ jobs:
       - name: Load previous test result
         uses: actions/download-artifact@v2
         with:
-          name: test-${{ github.base_ref }}
+          name: test-${{ github.event.base.sha }}
       - name: Load current test result
         uses: actions/download-artifact@v2
         with:
-          name: test-${{ github.head_ref }}
+          name: test-${{ github.sha }}
       - name: Run goppa
-        run: goppa --previous ./test-${{ github.base_ref }}.log --current ./test-${{ github.head_ref }}.log
+        run: goppa --previous ./test-${{ github.event.base.sha }}.log --current ./test-${{ github.sha }}.log
