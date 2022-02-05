@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"test/math"
+	"goppa-test/math"
 )
 
 func main() {
