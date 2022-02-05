@@ -1,5 +1,9 @@
 name: test
-on: push
+on:
+  pull_request:
+  push:
+    branches:
+      - main
 jobs:
   test:
     name: Test local sources
@@ -21,9 +25,31 @@ jobs:
       - name: Get dependencies
         run: go mod download -x
       - name: Test
-        run: go test -v ./...  > ./test-${{ github.ref_name }}.log
+        run: go test -v ./...  > ./test-${{ github.head_ref }}.log
       - name: Save test results
         uses: actions/upload-artifact@v2
         with:
-          name: test-${{ github.ref_name }}
-          path: ./test-${{ github.ref_name }}.log
+          name: test-${{ github.head_ref }}
+          path: ./test-${{ github.head_ref }}.log
+
+  goppa:
+    if: ${{ github.event_name }} == "pull_request"
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.17.6
+      - name: Install goppa
+        run: go install github.com/masibw/goppa@latest
+      - name: Load previous test result
+        uses: actions/download-artifact@v2
+        with:
+          name: test-${{ github.base_ref }}
+      - name: Load current test result
+        uses: actions/download-artifact@v2
+        with:
+          name: test-${{ github.head_ref }}
+      - name: Run goppa
+        run: goppa --previous ./test-${{ github.base_ref }}.log --current ./test-${{ github.head_ref }}.log
