@@ -46,7 +46,7 @@ jobs:
         if: always()
         uses: actions/download-artifact@v2
         with:
-          name: test-${{ github.head_ref }}]
+          name: test-${{ github.head_ref }}
       - name: Run goppa
         if: always()
         run: goppa --previous ./test-${{ github.base_ref }}.log --current ./test-${{ github.head_ref }}.log
